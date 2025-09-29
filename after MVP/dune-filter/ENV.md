@@ -1,0 +1,23 @@
+# ENV/구성 오버라이드
+
+## Dune API
+- `DUNE_API_KEY`: Dune API 키 (없으면 SQL만 출력)
+- `DUNE_API_URL`: 기본 `https://api.dune.com/api/v1`
+
+## 뷰/CTE 이름 오버라이드(옵션)
+- `DUNE_SEARCH_RESULT_CTE`
+- `DUNE_DEX_TRADES_24H_VIEW`
+- `DUNE_DEX_POOLS_VIEW`
+- `DUNE_TOKEN_META_VIEW`
+
+## 컷 파라미터 ENV 오버라이드(옵션)
+- `PREFILTER_MIN_LIQ_USD`
+- `PREFILTER_MIN_VOL24H_USD`
+- `PREFILTER_MIN_TRADES24H`
+- `PREFILTER_MIN_UNIQUE_TRADERS`
+- `PREFILTER_MIN_MCAP`
+- `PREFILTER_MAX_MCAP`
+- `PREFILTER_MIN_AGE_D`
+
+우선순위: 프리셋 기본 → per_chain(YAML) → ENV → CLI 인자
+

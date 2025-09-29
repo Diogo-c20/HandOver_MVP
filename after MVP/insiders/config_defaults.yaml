@@ -1,0 +1,51 @@
+windows:
+  fr_hours: [72, 12]
+  outflow_days: [7, 30]
+
+weights:
+  FR_vol: 15
+  FR_mkt: 10
+  EMR_team: 10
+  team_to_cex_over_ff: 5
+  SPI_VC: 10
+  SPI_mkt: 5
+
+thresholds:
+  grade:
+    HIGH: 80
+    MED: 60
+    MID: 40
+
+normalization:
+  winsorize: [1, 99]
+  denom_anchor: "window_start"
+  min_samples: 30
+  alpha_k: 20
+  half_life_days: 90
+  backoff: [
+    "CHAIN:FF_BIN:MCAP_BIN:EVENT_TYPE",
+    "CHAIN:FF_BIN:EVENT_TYPE",
+    "CHAIN:EVENT_GROUP",
+    "GLOBAL:EVENT_GROUP"
+  ]
+
+label_trust:
+  certain: 1.0
+  heuristic: 0.8
+  pattern: 0.6
+
+baseline_table_uri: "warehouse.insiders_baseline_v1"
+
+events:
+  penalties:
+    team_to_cex_ge_1pct_ff: 25
+    team_to_cex_ge_0_3pct_ff: 15
+    lockup_fanout: 8
+    vc_sync_sell_24h: 12
+    new_whale_from_cex_or_team: 10
+    obfuscation_bridge_mixer: 5
+  reliefs:
+    onchain_vesting_escrow: -8
+    vc_unlock_no_sell_30d: -8
+    mm_internal_liquidity_transfer: -6
+

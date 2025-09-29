@@ -1,0 +1,30 @@
+preset: balanced
+max_candidates: 200
+base_pairs:
+  include_legacy_stables: false
+  symbols: [USDC, USDT, DAI, FRAX, TUSD, FDUSD, WETH, WBTC, WBNB, SOL, WSOL]
+  addresses:
+    ETH: ["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"]
+    BNB: ["0x55d398326f99059fF775485246999027B3197955", "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"]
+    SOL: ["<USDC mint>", "<USDT mint>", "<WSOL mint>"]
+filters:
+  min_liq_usd: 6000000
+  min_vol24h_usd: 2000000
+  min_trades24h: 250
+  min_unique_traders: 120
+  min_mcap: 20000000
+  max_mcap: 5000000000
+  min_age_d: 3
+per_chain:
+  ETH: {}
+  BNB: {}
+  SOL: {}
+presets:
+  balanced:
+    min_liq_usd: 6000000
+    min_vol24h_usd: 2000000
+    min_trades24h: 250
+    min_unique_traders: 120
+    min_mcap: 20000000
+    max_mcap: 5000000000
+    min_age_d: 3

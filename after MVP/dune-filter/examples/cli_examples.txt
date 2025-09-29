@@ -1,0 +1,19 @@
+poetry run python -m src.cli collect \
+  --query "pepe" \
+  --preset balanced \
+  --max-candidates 200 \
+  --base-symbols "USDC,USDT,DAI,FRAX,TUSD,FDUSD,WETH,WBTC,WBNB,SOL,WSOL" \
+  --include-legacy-stables false \
+  --config prefilter.example.yaml
+
+# 컷 오버라이드 예시
+poetry run python -m src.cli collect \
+  --query "pepe" \
+  --min-liq-usd 5000000 \
+  --min-vol24h-usd 1500000 \
+  --min-trades24h 200 \
+  --min-unique-traders 100 \
+  --min-mcap 15000000 \
+  --max-mcap 4000000000 \
+  --min-age-d 2
+

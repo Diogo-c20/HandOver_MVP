@@ -1,0 +1,24 @@
+{
+  "model_type": "logreg_l1",
+  "feature_order": [
+    "t_since_t0_sec",
+    "gas_price_pctile",
+    "buy_size_vs_liquidity",
+    "same_block_swaps",
+    "is_contract_caller",
+    "router_default"
+  ],
+  "coef": [
+    0.0,
+    0.0,
+    -0.017866906527021706,
+    4.034934278309963,
+    0.0,
+    -1.4034789434313084
+  ],
+  "intercept": -2.8866245563413733,
+  "metrics": {
+    "train_pr_auc": 1.0,
+    "test_pr_auc": null
+  }
+}

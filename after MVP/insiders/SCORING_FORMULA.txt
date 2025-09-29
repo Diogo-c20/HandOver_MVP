@@ -1,0 +1,46 @@
+Insiders Risk Scoring 산식 요약 (자연어)
+
+1) 분모(t0 스냅샷) 고정 원칙
+- 모든 비율 지표의 분모는 윈도우 시작 시점 t0 스냅샷으로 고정해 후행 유출에 따른 분모 축소 착시를 방지.
+- Free-float 제외: 소각·락/베스팅·브리지/라우터·스테이킹풀·트레저리(조건부)·CEX 커스터디(조건부) 제외.
+- 엔티티 병합: 동일 출처/목적·동시행동 지갑 병합(주체 단위 집계).
+
+2) 원점수 지표 (시장영향 관점)
+- FR_vol = buy_vol(specific_group, [T-72h, T-12h]) / total_vol([T-72h, T-12h])
+- FR_mkt = buy_vol(specific_group, [T-72h, T-12h]) / free_float_t0
+  · specific_group: 공지 직전 신설/휴면→대량매수 & 과거 상장직전 매집 이력 지갑군.
+- EMR_team = cex_in(team_wallets, N_days) / team_holdings_t0
+- team_to_cex_over_ff = EMR_team * (team_holdings_t0 / free_float_t0) = cex_in(team) / free_float_t0
+- SPI_VC = outflow(vc_group, N_days) / unlocked_in_period(N_days)  (언락=0이면 NA)
+- SPI_mkt = outflow(insiders_all, N_days) / free_float_t0
+· 기본 윈도우: FR=[72h,12h], N_days=[7d, 30d]
+
+3) 정규화 (코호트 상대평가 0–100)
+- winsorize x @ [1,99] 분위로 극단치 완화
+- 퍼센타일 점수: score_pctl = 100 * rank(x)/(n+1)
+- robust-z 점수: z_rob = (x - median)/(IQR/1.349), score_robust = clip(0,100, 50 + 12*z_rob)
+- 혼합: score = α(n)*score_pctl + (1-α(n))*score_robust, α(n)=n/(n+20)
+- 백오프: [CHAIN×FF_BIN×MCAP_BIN×EVENT_TYPE] → [CHAIN×FF_BIN×EVENT_TYPE] → [CHAIN×EVENT_GROUP(FR/outflow)] → [GLOBAL×EVENT_GROUP]
+  · 각 레벨의 score를 표본수×시간감쇠(half-life 90d) 가중평균
+- 라벨 신뢰도 가중: label_trust ∈ {1.0(확실), 0.8(휴리스틱), 0.6(패턴)}를 정규화 점수에 곱해 보수화
+- NA 처리: 값이 NA이면 가장 구체한 가용 코호트의 중앙값으로 대체
+
+4) 이벤트 (패널티/완화) 및 시너지 감쇠
+- 패널티(예): 팀/재단→CEX 누적이 FF의 ≥1%(+25) / 0.3~1%(+15), 락업 직후 팬아웃(+8), VC 24h 동시매도(+12), 신규 고래(자금원 CEX/팀)(+10), 브리지/믹서 혼탁화(+5)
+- 완화(예): 온체인 베스팅/에스크로(−8), VC 언락 후 30일 무매도(−8), MM 유동성 내부이체(−6)
+- 시너지 감쇠: 이벤트 여러 개 동시 발생 시, 가장 큰 값을 100% 반영, 나머지는 60%만 추가
+
+5) 최종 InsiderScore 산식
+- 정규화된 지표 가중합 + 이벤트 합산(시너지 감쇠) → 0~100
+- 가중치(기본): w_FR_vol=15, w_FR_mkt=10, w_EMR_team=10, w_teamFF=5, w_SPI_VC=10, w_SPI_mkt=5
+  · base = sum(w_k * score_k)/sum(w_k)
+  · events_contrib = top_event + 0.6 * sum(other_events)
+  · InsiderScore = clip(0,100, base + events_contrib)
+
+6) 등급 기준
+- HIGH ≥ 80, MED 60–79, MID 40–59, LOW < 40
+
+7) 운영 메모
+- 가중치는 초기 휴리스틱으로 설정, 분기별 PSI/RankIC 모니터링에 따라 재조정 권장
+- 재조정 시 절차: 백테스트 → 가중치 탐색(±20%, 합계 정규화) → YAML 업데이트 → 섀도 모니터링 → 본 적용
+

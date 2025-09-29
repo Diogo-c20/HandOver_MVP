@@ -1,0 +1,30 @@
+discover:
+  chains: ["ethereum"]
+  timeframe_days: 90
+  quote_symbols: ["USDC", "USDT", "DAI"]
+  t0_window_seconds: 300
+  min_first_window_usd: 1000
+  dedup_mode: "per_tx"
+  # Fill with your Dune Saved Query IDs (integers)
+  query_id_discover: 5770522       # TODO: replace with real ID
+  query_id_early_trades: 5772250
+
+dune:
+  poll_interval_sec: 2
+  max_poll_sec: 180
+
+augment:
+  enable_rpc: true
+  max_workers: 8
+  timeout_sec: 8
+
+training:
+  model: "logreg_l1"
+  threshold_policy: "precision_at_k"
+  target_precision: 0.90
+  stale_days: 30
+
+paths:
+  cache_dir: "/Users/chorch66/Desktop/Hyperindex/snipers/cache"
+  artifacts_dir: "/Users/chorch66/Desktop/Hyperindex/snipers/artifacts"
+  dataset_dir: "/Users/chorch66/Desktop/Hyperindex/snipers/dataset"

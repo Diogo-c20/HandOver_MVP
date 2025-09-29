@@ -1,0 +1,31 @@
+feature_order:
+- t_since_t0_sec
+- gas_price_pctile
+- buy_size_vs_liquidity
+- same_block_swaps
+- is_contract_caller
+- router_default
+one_hot_features:
+- router_default
+scaling:
+  cohort_keys:
+  - chain
+  - tvl_quartile
+  - mcap_bin
+  scalers:
+    ('ethereum', 'Q2', 'micro'):
+      t_since_t0_sec:
+        median: 132.0
+        iqr: 168.0
+      gas_price_pctile:
+        median: 50.049019607843135
+        iqr: 1.0e-12
+      buy_size_vs_liquidity:
+        median: 1.6855415062865249
+        iqr: 6.168137898648776
+      same_block_swaps:
+        median: 8.0
+        iqr: 20.0
+      is_contract_caller:
+        median: 0.0
+        iqr: 1.0e-12
